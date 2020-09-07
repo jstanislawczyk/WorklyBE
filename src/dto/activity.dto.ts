@@ -1,15 +1,16 @@
-import {IsArray, IsEnum, IsOptional, IsString, Max} from 'class-validator';
+import {IsArray, IsEnum, IsInt, IsOptional, IsPositive, IsString, MaxLength} from 'class-validator';
 import {ActivityType} from '../enum/activity-type';
-import {ActivityTimeReport} from '../entity/activity-time-report';
-import {Column} from 'typeorm';
+import {TimeReport} from '../entity/time-report';
 
 export class ActivityDto {
 
+  @IsOptional()
+  @IsInt()
+  @IsPositive()
   public id?: number;
 
-  @Column()
   @IsString()
-  @Max(70)
+  @MaxLength(70)
   public name: string;
 
   @IsEnum(ActivityType)
@@ -17,9 +18,10 @@ export class ActivityDto {
 
   @IsOptional()
   @IsString()
-  @Max(200)
+  @MaxLength(200)
   public description?: string;
 
+  @IsOptional()
   @IsArray()
-  public activityTimeReports?: ActivityTimeReport[];
+  public activityTimeReports?: TimeReport[];
 }

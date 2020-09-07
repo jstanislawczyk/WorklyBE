@@ -3,8 +3,8 @@ import {ActivityService} from './activity.service';
 import {ActivityRepository} from '../repository/activity.repository';
 import {Activity} from '../entity/activity';
 import {ActivityFixture} from '../../test/fixture/activity.fixture';
-import SpyInstance = jest.SpyInstance;
 import {DeleteResult} from 'typeorm';
+import SpyInstance = jest.SpyInstance;
 
 describe('ActivityService', () => {
   let activityService: ActivityService;
@@ -53,6 +53,21 @@ describe('ActivityService', () => {
 
       // Assert
       await expect(result).resolves.toEqual(activities);
+    });
+
+    it('should pass exception thrown by repository', async () => {
+      // Arrange
+      jest
+        .spyOn(activityRepository, 'find')
+        .mockImplementation(async () => {
+          throw new Error('Repository error');
+        });
+
+      // Act
+      const result: Promise<Activity[]> = activityService.getAllActivities();
+
+      // Assert
+      await expect(result).rejects.toEqual(new Error('Repository error'));
     });
   });
 
@@ -134,6 +149,27 @@ describe('ActivityService', () => {
       await expect(result).rejects.toEqual(new Error(`Activity with name=${activity.name} already exists`));
       expect(findByNameSpy).toHaveBeenCalledWith(activity.name);
     });
+
+    it('should pass error thrown by repository', async () => {
+      // Arrange
+      const existingActivity: Activity = ActivityFixture.getActivityEntityWithOptionalProperties();
+
+      jest
+        .spyOn(activityRepository, 'findByName')
+        .mockImplementation(async () => undefined);
+
+      jest
+        .spyOn(activityRepository, 'save')
+        .mockImplementation(async () => {
+          throw new Error('Repository error');
+        });
+
+      // Act
+      const result: Promise<Activity> = activityService.createActivity(existingActivity);
+
+      // Assert
+      await expect(result).rejects.toEqual(new Error('Repository error'));
+    });
   });
 
   describe('deleteActivity', () => {
@@ -157,7 +193,7 @@ describe('ActivityService', () => {
       expect(deleteSpy).toHaveBeenCalledWith(activity.id);
     });
 
-    it('should delete activity', async () => {
+    it('should throw exception if delete will not affect any record', async () => {
       // Arrange
       const activity: Activity = ActivityFixture.getActivityEntityWithOptionalProperties();
       const mockedDeleteResult: DeleteResult = {
@@ -175,6 +211,23 @@ describe('ActivityService', () => {
       // Assert
       await expect(result).rejects.toEqual(new Error(`Activity with id=${activity.id} not found`));
       expect(deleteSpy).toHaveBeenCalledWith(activity.id);
+    });
+
+    it('should pass error thrown by repository', async () => {
+      // Arrange
+      const activity: Activity = ActivityFixture.getActivityEntityWithOptionalProperties();
+
+      jest
+        .spyOn(activityRepository, 'delete')
+        .mockImplementation(async () => {
+          throw new Error('Repository error');
+        });
+
+      // Act
+      const result: Promise<void> = activityService.deleteActivity(activity.id);
+
+      // Assert
+      await expect(result).rejects.toEqual(new Error('Repository error'));
     });
   });
 });

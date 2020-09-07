@@ -6,7 +6,7 @@ import {DeleteResult} from 'typeorm';
 @Injectable()
 export class ActivityService {
 
-  constructor(private activityRepository: ActivityRepository) {}
+  constructor(private readonly activityRepository: ActivityRepository) {}
 
   public async getAllActivities(): Promise<Activity[]> {
     return this.activityRepository.find();

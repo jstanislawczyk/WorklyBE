@@ -36,6 +36,6 @@ export class ActivityTestRepository {
       .delete()
       .from(Activity)
       .where("id > 0")
-      .execute()
+      .execute();
   }
 }

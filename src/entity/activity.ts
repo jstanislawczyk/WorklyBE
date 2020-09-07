@@ -1,5 +1,5 @@
-import {IsArray, IsEnum, IsOptional, IsString, Max} from 'class-validator';
-import {ActivityTimeReport} from './activity-time-report';
+import {IsArray, IsEnum, IsInt, IsOptional, IsPositive, IsString, MaxLength} from 'class-validator';
+import {TimeReport} from './time-report';
 import {Column, Entity, OneToMany, PrimaryGeneratedColumn} from 'typeorm';
 import {ActivityType} from '../enum/activity-type';
 
@@ -7,11 +7,14 @@ import {ActivityType} from '../enum/activity-type';
 export class Activity {
 
   @PrimaryGeneratedColumn()
+  @IsOptional()
+  @IsInt()
+  @IsPositive()
   public id?: number;
 
   @Column()
   @IsString()
-  @Max(70)
+  @MaxLength(70)
   public name: string;
 
   @Column()
@@ -21,13 +24,14 @@ export class Activity {
   @Column({ nullable: true })
   @IsOptional()
   @IsString()
-  @Max(200)
+  @MaxLength(200)
   public description?: string;
 
-  @IsArray()
   @OneToMany(
-    type => ActivityTimeReport,
+    () => TimeReport,
     activityTimeReport => activityTimeReport.activity,
   )
-  public activityTimeReports?: ActivityTimeReport[];
+  @IsOptional()
+  @IsArray()
+  public activityTimeReports?: TimeReport[];
 }

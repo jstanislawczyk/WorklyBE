@@ -1,4 +1,4 @@
-import {INestApplication} from '@nestjs/common';
+import {INestApplication, ValidationPipe} from '@nestjs/common';
 import {NestFactory} from '@nestjs/core';
 import {AppModule} from '../app.module';
 import configuration from './configuration';
@@ -10,6 +10,7 @@ export class Application {
   public async start(): Promise<void> {
     const app: INestApplication = await NestFactory.create(AppModule);
 
+    app.useGlobalPipes(new ValidationPipe());
     app.setGlobalPrefix('api');
     await app.listen(configuration().app.port);
 
