@@ -20,7 +20,7 @@ export class ActivityController {
   }
 
   @Get(':id')
-  public async getActivityById(@Param('id') id: number): Promise<ActivityDto> {
+  public async getActivityById(@Param('id') id: number): Promise<Activity> {
     Logger.log(`Fetching activity with id=${id}`);
 
     const activity: Activity = await this.activityService.getActivityById(id);
@@ -30,7 +30,7 @@ export class ActivityController {
 
   @Post()
   @HttpCode(201)
-  public async createActivity(@Body() activityDto: ActivityDto): Promise<ActivityDto> {
+  public async createActivity(@Body() activityDto: ActivityDto): Promise<Activity> {
     Logger.log(`Saving new activity with name=${activityDto.name}`);
 
     const activity: Activity = ActivityDtoMapper.toEntity(activityDto);
