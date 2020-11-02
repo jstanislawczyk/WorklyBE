@@ -11,6 +11,11 @@ import {TimeReportService} from './service/time-report.service';
 import {TimeReportRepository} from './repository/time-report.repository';
 import {ActivityTimeReportFacade} from './facade/activity-time-report.facade';
 import {TimeReportController} from './controller/time-report.controller';
+import {AuthService} from './service/auth.service';
+import {UsersService} from './service/users.service';
+import {AuthController} from './controller/auth.controller';
+import {LocalStrategy} from './security/local.strategy';
+import {PassportModule} from '@nestjs/passport';
 
 @Module({
   imports: [
@@ -21,10 +26,11 @@ import {TimeReportController} from './controller/time-report.controller';
     TypeOrmModule.forFeature([
       ActivityRepository,
       TimeReportRepository,
-    ])
+    ]),
   ],
   controllers: [
     ActivityController,
+    AuthController,
     TimeReportController,
     ActivityTimeReportController,
   ],
@@ -32,6 +38,10 @@ import {TimeReportController} from './controller/time-report.controller';
     ActivityTimeReportFacade,
     ActivityService,
     TimeReportService,
+    AuthService,
+    UsersService,
+    LocalStrategy,
+    PassportModule,
   ],
 })
 export class AppModule {
