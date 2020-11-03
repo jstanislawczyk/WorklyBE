@@ -11,4 +11,10 @@ export default () => ({
     username: process.env.DATABASE_USERNAME || 'root',
     password: process.env.DATABASE_PASSWORD || 'root',
   },
+  security: {
+    jwt: {
+      secret: process.env.JWT_SECRET ?? 'secret',
+      expiresIn: process.env.JWT_EXPIRES ?? '60s',
+    },
+  }
 });

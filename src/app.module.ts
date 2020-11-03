@@ -14,9 +14,10 @@ import {TimeReportController} from './controller/time-report.controller';
 import {AuthService} from './service/auth.service';
 import {UsersService} from './service/users.service';
 import {AuthController} from './controller/auth.controller';
-import {LocalStrategy} from './security/local.strategy';
+import {JwtStrategy} from './security/jwt.strategy';
 import {PassportModule} from '@nestjs/passport';
 import {JwtModule} from '@nestjs/jwt';
+import { LocalStrategy } from './security/local.strategy';
 
 @Module({
   imports: [
@@ -30,9 +31,9 @@ import {JwtModule} from '@nestjs/jwt';
     ]),
     PassportModule,
     JwtModule.register({
-      secret: process.env.JWT_SECRET ?? 'secret',
+      secret: configuration().security.jwt.secret,
       signOptions: {
-        expiresIn: process.env.JWT_EXPIRES ?? '60s',
+        expiresIn: configuration().security.jwt.expiresIn,
       },
     }),
   ],
@@ -48,6 +49,7 @@ import {JwtModule} from '@nestjs/jwt';
     TimeReportService,
     AuthService,
     UsersService,
+    JwtStrategy,
     LocalStrategy,
     PassportModule,
   ],
