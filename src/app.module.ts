@@ -16,6 +16,7 @@ import {UsersService} from './service/users.service';
 import {AuthController} from './controller/auth.controller';
 import {LocalStrategy} from './security/local.strategy';
 import {PassportModule} from '@nestjs/passport';
+import {JwtModule} from '@nestjs/jwt';
 
 @Module({
   imports: [
@@ -27,6 +28,13 @@ import {PassportModule} from '@nestjs/passport';
       ActivityRepository,
       TimeReportRepository,
     ]),
+    PassportModule,
+    JwtModule.register({
+      secret: process.env.JWT_SECRET ?? 'secret',
+      signOptions: {
+        expiresIn: process.env.JWT_EXPIRES ?? '60s',
+      },
+    }),
   ],
   controllers: [
     ActivityController,
