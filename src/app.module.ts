@@ -17,7 +17,8 @@ import {AuthController} from './controller/auth.controller';
 import {JwtStrategy} from './security/jwt.strategy';
 import {PassportModule} from '@nestjs/passport';
 import {JwtModule} from '@nestjs/jwt';
-import { LocalStrategy } from './security/local.strategy';
+import {LocalStrategy} from './security/local.strategy';
+import {UserRepository} from './repository/user.repository';
 
 @Module({
   imports: [
@@ -28,8 +29,11 @@ import { LocalStrategy } from './security/local.strategy';
     TypeOrmModule.forFeature([
       ActivityRepository,
       TimeReportRepository,
+      UserRepository,
     ]),
-    PassportModule,
+    PassportModule.register({
+      defaultStrategy: 'jwt',
+    }),
     JwtModule.register({
       secret: configuration().security.jwt.secret,
       signOptions: {
