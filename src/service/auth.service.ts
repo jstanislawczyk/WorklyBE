@@ -1,9 +1,9 @@
 import {Injectable} from '@nestjs/common';
 import {UsersService} from './users.service';
 import {JwtService } from '@nestjs/jwt';
-import {User} from '../entity/User';
+import {User} from '../entity/user';
 import {TokenResponse} from '../model/token-response.model';
-import {TokenPayload} from '../model/token-payload.model';
+import {UserTokenPayload} from '../model/user-token-payload.model';
 
 @Injectable()
 export class AuthService {
@@ -20,13 +20,13 @@ export class AuthService {
   }
 
   public async getUserToken(user: User): Promise<TokenResponse> {
-    const payload: TokenPayload = {
+    const tokenPayload: UserTokenPayload = {
       email: user.email,
       sub: user.id,
     };
 
     return {
-      accessToken: this.jwtService.sign(payload),
+      accessToken: this.jwtService.sign(tokenPayload),
     };
   }
 }
